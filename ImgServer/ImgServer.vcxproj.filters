@@ -36,9 +36,15 @@
     <ClCompile Include="ImgServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MCServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ImgServer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MCServer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
