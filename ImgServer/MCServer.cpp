@@ -19,6 +19,7 @@ MCServer::MCServer(const QString& groupAddress, unsigned short port, QObject* pa
 
 MCServer::~MCServer()
 {
+    delete[] m_imgLenBuf;
 }
 
 void MCServer::sendDatagram(const QByteArray& data)
@@ -31,6 +32,12 @@ void MCServer::setTTL(int ttl)
     m_socket->setSocketOption(QAbstractSocket::MulticastTtlOption, ttl);
 }
 
+//void MCServer::start()
+//{
+//    m_socket = new QUdpSocket(this);
+//}
+
+
 void MCServer::shutdown()
 {
     m_isRunning = false;
@@ -38,7 +45,12 @@ void MCServer::shutdown()
 
 void MCServer::run()
 {
+    m_socket = new QUdpSocket(this);
+
+    setTTL(5);
+
     m_isRunning = true;
+
     while (m_isRunning)
     {
         QPixmap pixmap = QApplication::primaryScreen()->grabWindow(0);
@@ -50,8 +62,10 @@ void MCServer::run()
         }
         const char* pImg = ba.constData();
         int imgLen = ba.length();
+        qDebug() << "image len: " << imgLen;
         sprintf(m_imgLenBuf, "newImage:%d", imgLen);
 
+        //发送图片长度
         m_socket->writeDatagram(m_imgLenBuf, strlen(m_imgLenBuf), m_hostAddress, m_port);
         //等待数据包发出
         m_socket->waitForBytesWritten();
@@ -65,7 +79,7 @@ void MCServer::run()
             else
                 sendingLen = imgLen - sentLen;
 
-            m_socket->writeDatagram(pImg, sendingLen, m_hostAddress, m_port);
+            m_socket->writeDatagram(pImg + sentLen, sendingLen, m_hostAddress, m_port);
             m_socket->waitForBytesWritten();
         }
     }

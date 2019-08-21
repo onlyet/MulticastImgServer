@@ -5,6 +5,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     ImgServer w;
-    w.show();
+    //w.show();
+    w.start();
+
     return a.exec();
 }

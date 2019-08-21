@@ -16,9 +16,10 @@ public:
 
 signals:
 
-    private slots :
-        void run();
+public slots :
+    //void start();
     void shutdown();
+    void run();
 
 private:
     QUdpSocket*     m_socket;
